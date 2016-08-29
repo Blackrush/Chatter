@@ -10,6 +10,10 @@ defmodule Chatter.Router do
     plug :put_secure_browser_headers
   end
 
+  pipeline :secure_browser do
+    plug Chatter.Plugs.HttpBasic
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -22,7 +26,7 @@ defmodule Chatter.Router do
   end
 
   scope "/admin", ExAdmin do
-    pipe_through :browser
+    pipe_through [:browser, :secure_browser]
 
     admin_routes
   end
